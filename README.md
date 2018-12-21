@@ -1,6 +1,6 @@
 # fastify-dataloader
 fastify-dataloader implement [dataloader](https://github.com/facebook/dataloader) for Fastify. 
-This plugin handles dynamic creation of dataloader instances for each request, this comply with the caching per-request recommendation of dataloader.
+This plugin adds dataloader instances to reply and handles dynamic creation of dataloader instances for each request.
 
 ## Register 
 
