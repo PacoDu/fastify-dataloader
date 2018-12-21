@@ -24,7 +24,7 @@ const ORM = {
 }
 
 app.register(dataloader, {
-  user: keys => ORM.user.batchLoader(keys)
+  user: ORM.user.batchLoader
 })
 
 app.get('/', async (_, reply) => {
