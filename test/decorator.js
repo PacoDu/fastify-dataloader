@@ -8,12 +8,15 @@ test('basic dataloader instance', async (t) => {
   const app = Fastify()
 
   app.register(dataloader, {
-    user: keys => keys.map(key => {
-      return { id: key, test: 'hello' }
-    })
+    user: keys => {
+      app.log.debug({ keys }, 'fetching user')
+      return new Promise(resolve => keys.map(key => {
+        return { id: key, test: 'hello' }
+      }))
+    }
   })
 
-  app.get('/test?id=1', (request, reply) => {
+  app.get('/', (request, reply) => {
     return reply.dataloader('user').load(1)
   })
 
