@@ -2,31 +2,65 @@
 
 const { test } = require('tap')
 const Fastify = require('fastify')
-const dataloader = require('..')
+const fDataloader = require('..')
+const Dataloader = require('dataloader')
 
-test('basic dataloader instance', async (t) => {
+test('dataloader is instance of Dataloader', async (t) => {
   const app = Fastify()
 
-  app.register(dataloader, {
+  app.register(fDataloader, {
+    user: _ => {}
+  })
+
+  app.get('/', async (_, reply) => {
+    const loader = await reply.dataloader('user')
+    t.strictEqual(loader instanceof Dataloader, true)
+    return {}
+  })
+
+  try {
+    await app.inject({
+      method: 'GET',
+      url: '/'
+    })
+  } catch (err) {
+    t.error(err)
+  }
+})
+
+test('load calls related loader', async (t) => {
+  const app = Fastify()
+
+  app.register(fDataloader, {
     user: keys => {
       app.log.debug({ keys }, 'fetching user')
-      return new Promise(resolve => keys.map(key => {
-        return { id: key, test: 'hello' }
-      }))
+      return new Promise(resolve => resolve(keys.map(key => {
+        return { id: key, type: 'user' }
+      })))
+    },
+    author: keys => {
+      app.log.debug({ keys }, 'fetching user')
+      return new Promise(resolve => resolve(keys.map(key => {
+        return { id: key, type: 'author' }
+      })))
     }
   })
 
-  app.get('/', (request, reply) => {
-    return reply.dataloader('user').load(1)
+  app.get('/:id', async (req, reply) => {
+    const loader = reply.dataloader('user')
+    return loader.load(req.params.id)
   })
 
-  await app.inject({
-    method: 'GET',
-    url: '/?id=1'
-  }, (err, response) => {
+  try {
+    const res = await app.inject({
+      method: 'GET',
+      url: '/1'
+    })
+
+    t.strictEqual(res.statusCode, 200)
+    t.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8')
+    t.deepEqual(JSON.parse(res.payload), { id: 1, type: 'user' })
+  } catch (err) {
     t.error(err)
-    t.strictEqual(response.statusCode, 200)
-    t.strictEqual(response.headers['content-type'], 'application/json; charset=utf-8')
-    t.deepEqual(JSON.parse(response.payload), { id: 1, hello: 'world' })
-  })
+  }
 })

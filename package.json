@@ -4,7 +4,8 @@
   "description": "Fastify plugin for dataloader",
   "main": "index.js",
   "scripts": {
-    "test": "standard | snazzy && tap -J test/*.js"
+    "test": "standard | snazzy && tap -J test/*.js",
+    "rawtest": "tap -J test/*.js"
   },
   "repository": {
     "type": "git",

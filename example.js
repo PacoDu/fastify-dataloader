@@ -11,16 +11,16 @@ const app = Fastify({
 app.register(dataloader, {
   user: keys => {
     app.log.debug({ keys }, 'fetching user')
-    return new Promise(resolve => keys.map(key => {
-      return { id: key, test: 'hello' }
-    }))
+    return new Promise(resolve => resolve(keys.map(key => {
+      return { id: key, hello: 'world' }
+    })))
   }
 })
 
-app.get('/', (request, reply) => {
-  const user1 = reply.dataloader('user').load(1)
-  const user2 = reply.dataloader('user').load(2)
-  const user12 = reply.dataloader('user').load(1)
+app.get('/', async (_, reply) => {
+  const user1 = await reply.dataloader('user').load(1)
+  const user2 = await reply.dataloader('user').load(2)
+  const user12 = await reply.dataloader('user').load(1)
 
   reply.send({ user1, user2, user12 })
 })
