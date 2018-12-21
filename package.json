@@ -1,0 +1,33 @@
+{
+  "name": "fastify-dataloader",
+  "version": "1.0.0",
+  "description": "Fastify plugin for dataloader",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard | snazzy && tap -J test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PacoDu/fastify-dataloader.git"
+  },
+  "keywords": [
+    "fastify",
+    "dataloader"
+  ],
+  "author": "Paco Dupont <paco.dupont@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PacoDu/fastify-dataloader/issues"
+  },
+  "homepage": "https://github.com/PacoDu/fastify-dataloader#readme",
+  "dependencies": {
+    "dataloader": "^1.4.0",
+    "fastify-plugin": "^1.4.0"
+  },
+  "devDependencies": {
+    "fastify": "^1.13.2",
+    "snazzy": "^8.0.0",
+    "standard": "^12.0.1",
+    "tap": "^12.1.1"
+  }
+}
