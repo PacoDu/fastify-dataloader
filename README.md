@@ -6,12 +6,12 @@ This plugin handles dynamic creation of dataloader instances for each request, t
 
 To register fastify-dataloader you have to specify your batchLoading functions in opts:
 ```javascript
-function batchLoader(keys) {
+function userBatchLoader(keys) {
   // fetch keys from backend
 }
 
 app.register(require('fastify-dataloader'), {
-  user: batchLoader
+  user: userBatchLoader
 })
 ```
 
