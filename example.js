@@ -8,21 +8,31 @@ const app = Fastify({
   }
 })
 
-app.register(dataloader, {
-  user: keys => {
-    app.log.debug({ keys }, 'fetching user')
-    return new Promise(resolve => resolve(keys.map(key => {
-      return { id: key, hello: 'world' }
-    })))
+const ORM = {
+  user: {
+    batchLoader: keys => {
+      app.log.debug({ keys }, 'fetching user')
+
+      return new Promise(resolve => {
+        const users = keys.map(key => {
+          return { id: key, hello: 'world' }
+        })
+        resolve(users)
+      })
+    }
   }
+}
+
+app.register(dataloader, {
+  user: keys => ORM.user.batchLoader(keys)
 })
 
 app.get('/', async (_, reply) => {
   const user1 = await reply.dataloader('user').load(1)
   const user2 = await reply.dataloader('user').load(2)
-  const user12 = await reply.dataloader('user').load(1)
+  const user1duplicate = await reply.dataloader('user').load(1)
 
-  reply.send({ user1, user2, user12 })
+  reply.send({ user1, user2, user1duplicate })
 })
 
 app.listen(3000)
