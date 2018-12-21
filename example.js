@@ -28,11 +28,11 @@ app.register(dataloader, {
 })
 
 app.get('/', async (_, reply) => {
-  const user1 = await reply.dataloader('user').load(1)
-  const user2 = await reply.dataloader('user').load(2)
-  const user1duplicate = await reply.dataloader('user').load(1)
+  const user1 = reply.dataloader('user').load(1)
+  const user2 = reply.dataloader('user').load(2)
+  const user1duplicate = reply.dataloader('user').load(1)
 
-  reply.send({ user1, user2, user1duplicate })
+  return Promise.all([user1, user2, user1duplicate])
 })
 
 app.listen(3000)
