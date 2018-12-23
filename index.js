@@ -19,7 +19,7 @@ module.exports = fp(async function (app, opts) {
 
   app.decorate('dataloader', {
     registerDataloader: (_name, _loader) => {
-      dataloaders.set(_name, _loader)
+      loaders.set(_name, _loader)
     }
   })
 
