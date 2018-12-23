@@ -8,7 +8,7 @@ module.exports = fp(async function (app, opts) {
 
   app.log.debug(loadersConfig, 'Init dataloader plugin')
 
-  app.decorateRequest('dataloaders', {})
+  app.decorateReply('dataloaders', {})
 
   app.addHook('preHandler', async (req, reply) => {
     reply.dataloader = makeDataloader()
@@ -17,6 +17,12 @@ module.exports = fp(async function (app, opts) {
   function makeDataloader () {
     const loaders = new Map(Object.entries(loadersConfig))
     const dataloaders = new Map()
+
+    app.decorate('dataloaders', {
+      registerDataloader: (_name, _loader) => {
+        dataloaders.set(_name, _loader)
+      }
+    })
 
     return loaderKey => {
       if (!loaders || !loaders.has(loaderKey)) throw new Error(`Unknown loader ${loaderKey}`)

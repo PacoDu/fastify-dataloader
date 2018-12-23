@@ -58,11 +58,11 @@ app.register(require('fastify-dataloader'), {
 })
 
 app.get('/', async (_, reply) => {
-  // ORM will be called only once to fetch [1, 2]
   const user1 = reply.dataloader('user').load(1)
   const user2 = reply.dataloader('user').load(2)
   const user1duplicate = reply.dataloader('user').load(1)
 
+  // ORM will be called only once to fetch [1, 2]
   return Promise.all([user1, user2, user1duplicate])
 })
 
