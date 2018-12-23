@@ -14,16 +14,16 @@ module.exports = fp(async function (app, opts) {
     reply.dataloader = makeDataloader()
   })
 
+  const loaders = new Map(Object.entries(loadersConfig))
+  const dataloaders = new Map()
+
+  app.decorate('dataloader', {
+    registerDataloader: (_name, _loader) => {
+      dataloaders.set(_name, _loader)
+    }
+  })
+
   function makeDataloader () {
-    const loaders = new Map(Object.entries(loadersConfig))
-    const dataloaders = new Map()
-
-    app.decorate('dataloaders', {
-      registerDataloader: (_name, _loader) => {
-        dataloaders.set(_name, _loader)
-      }
-    })
-
     return loaderKey => {
       if (!loaders || !loaders.has(loaderKey)) throw new Error(`Unknown loader ${loaderKey}`)
 
